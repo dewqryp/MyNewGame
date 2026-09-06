@@ -57,32 +57,46 @@ public class Field extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                player.setAimingAngle(player.getAimingAngle() - 5);
-                repaint();
+                if (player.getAimingAngle() > 0) {
+                    player.setAimingAngle(player.getAimingAngle() - 5);
+                    repaint();
+                }
             }
 
         });
         actionMap.put("aimRight", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                player.setAimingAngle(player.getAimingAngle() + 5);
-                repaint();
+                    if(player.getAimingAngle() >= 360) {
+                        player.setAimingAngle(0);
+                    }
+                    else {
+                        player.setAimingAngle(player.getAimingAngle() + 5);
+                        repaint();
+                    }
+
             }
 
         });
         actionMap.put("increaseForce", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                player.setAimingForce(player.getAimingForce() + 5);
-                repaint();
+                    if(player.getAimingForce() >= 100) {
+                        player.setAimingForce(0);
+                    }
+                    player.setAimingForce(player.getAimingForce() + 5);
+                    repaint();
+
             }
 
         });
         actionMap.put("decreaseForce", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                player.setAimingForce(player.getAimingForce() - 5);
-                repaint();
+                if (player.getAimingForce() > 0) {
+                    player.setAimingForce(player.getAimingForce() - 5);
+                    repaint();
+                }
             }
 
         });
@@ -100,6 +114,11 @@ public class Field extends JPanel {
 
         super.paintComponent(g);
         g.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
+        double radians = Math.toRadians(player.getAimingAngle());
+        int aimLength = 50;
+        int endX = player.getX() + (int)(Math.cos(radians) * aimLength);
+        int endY = player.getY() - (int)(Math.sin(radians) * aimLength);
+        g.drawLine(player.getX(), player.getY(), endX, endY);
         g.fillRect(tree.getX() - 10, tree.getY() - 50, 20, 50);
         for(Apple apple : apples) {
             g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
