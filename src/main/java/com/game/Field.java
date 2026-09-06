@@ -114,11 +114,15 @@ public class Field extends JPanel {
 
         super.paintComponent(g);
         g.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
+        Graphics2D g2d = (Graphics2D) g;
+        float force = player.getAimingForce();
+        int aimLength = 20 + (int)(force*5);
+        float thickness = 1 + force / 10;
+        g2d.setStroke(new BasicStroke(thickness));
         double radians = Math.toRadians(player.getAimingAngle());
-        int aimLength = 50;
         int endX = player.getX() + (int)(Math.cos(radians) * aimLength);
         int endY = player.getY() - (int)(Math.sin(radians) * aimLength);
-        g.drawLine(player.getX(), player.getY(), endX, endY);
+        g2d.drawLine(player.getX(), player.getY(), endX, endY);
         g.fillRect(tree.getX() - 10, tree.getY() - 50, 20, 50);
         for(Apple apple : apples) {
             g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
