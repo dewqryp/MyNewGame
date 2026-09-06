@@ -138,6 +138,7 @@ public class Field extends JPanel {
         drawBackground(g2d);
         drawGround(g2d);
         drawTrajectory(g2d);
+        drawTreeShadow(g2d);
         drawPlayer(g2d);
         drawTree(g2d);
         drawApples(g2d);
@@ -151,21 +152,26 @@ public class Field extends JPanel {
         g2d.setPaint(sky);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        g2d.setColor(new Color(255, 255, 255, 70));
-        for (int i = 0; i < 10; i++) {
-            int x = 50 + i * 80;
-            int y = 60 + (i % 3) * 25;
-            g2d.fillOval(x, y, 4, 4);
+        g2d.setColor(new Color(255, 255, 255, 90));
+        for (int i = 0; i < 12; i++) {
+            int x = 50 + i * 90;
+            int y = 50 + (i % 4) * 22;
+            g2d.fillOval(x, y, 5, 5);
         }
     }
 
     private void drawGround(Graphics2D g2d) {
-        g2d.setColor(new Color(89, 172, 76));
+        g2d.setColor(new Color(100, 180, 90));
         g2d.fillRect(0, GROUND_Y, getWidth(), getHeight() - GROUND_Y);
 
-        g2d.setColor(new Color(118, 90, 51));
-        for (int i = 0; i < getWidth(); i += 30) {
-            g2d.fillRect(i, GROUND_Y, 15, 8);
+        g2d.setColor(new Color(120, 90, 55));
+        for (int i = 0; i < getWidth(); i += 35) {
+            g2d.fillRect(i, GROUND_Y, 16, 9);
+        }
+
+        g2d.setColor(new Color(90, 150, 70));
+        for (int i = 0; i < getWidth(); i += 20) {
+            g2d.fillOval(i, GROUND_Y - 6, 12, 12);
         }
     }
 
@@ -174,15 +180,26 @@ public class Field extends JPanel {
         int aimLength = 20 + (int) (force * 5);
         float thickness = 1 + force / 10;
         g2d.setStroke(new BasicStroke(thickness));
-        g2d.setColor(new Color(255, 255, 255, 180));
+        g2d.setColor(new Color(255, 255, 255, 170));
 
         double radians = Math.toRadians(player.getAimingAngle());
         int endX = player.getX() + (int) (Math.cos(radians) * aimLength);
         int endY = player.getY() - (int) (Math.sin(radians) * aimLength);
         g2d.drawLine(player.getX(), player.getY(), endX, endY);
+
+        g2d.setColor(new Color(255, 165, 0, 120));
+        g2d.fillOval(endX - 4, endY - 4, 8, 8);
+    }
+
+    private void drawTreeShadow(Graphics2D g2d) {
+        g2d.setColor(new Color(0, 0, 0, 30));
+        g2d.fillOval(tree.getX() - 60, GROUND_Y - 10, 120, 22);
     }
 
     private void drawPlayer(Graphics2D g2d) {
+        g2d.setColor(new Color(0, 0, 0, 30));
+        g2d.fillOval(player.getX() - 18, GROUND_Y - 6, 36, 12);
+
         g2d.setColor(new Color(72, 72, 72));
         g2d.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
 
@@ -201,6 +218,9 @@ public class Field extends JPanel {
 
         g2d.setColor(new Color(91, 143, 59));
         g2d.fillOval(tree.getX() - 22, tree.getY() - 45, 44, 26);
+
+        g2d.setColor(new Color(255, 230, 120, 80));
+        g2d.fillOval(tree.getX() - 12, tree.getY() - 80, 22, 18);
     }
 
     private void drawApples(Graphics2D g2d) {
@@ -209,12 +229,14 @@ public class Field extends JPanel {
             g2d.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
             g2d.setColor(new Color(255, 255, 255, 120));
             g2d.fillOval(apple.getX() - 3, apple.getY() - 5, 5, 5);
+            g2d.setColor(new Color(0, 0, 0, 25));
+            g2d.fillOval(apple.getX() - 6, apple.getY() + 4, 12, 5);
         }
     }
 
     private void drawHud(Graphics2D g2d) {
         g2d.setColor(new Color(30, 30, 30, 180));
-        g2d.fillRoundRect(12, 12, 210, 72, 14, 14);
+        g2d.fillRoundRect(12, 12, 220, 80, 16, 16);
 
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
