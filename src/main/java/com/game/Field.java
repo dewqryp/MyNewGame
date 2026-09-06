@@ -19,7 +19,9 @@ public class Field extends JPanel {
         player = new Physicist(100, 100);
         tree = new Tree(400, 300);
 
+
         setPreferredSize(new Dimension(800, 500));
+        setUpControls();
     }
 
     public void tossApple() {
@@ -54,7 +56,9 @@ public class Field extends JPanel {
         actionMap.put("aimLeft", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 player.setAimingAngle(player.getAimingAngle() - 5);
+                repaint();
             }
 
         });
@@ -62,6 +66,7 @@ public class Field extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 player.setAimingAngle(player.getAimingAngle() + 5);
+                repaint();
             }
 
         });
@@ -69,6 +74,7 @@ public class Field extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 player.setAimingForce(player.getAimingForce() + 5);
+                repaint();
             }
 
         });
@@ -76,6 +82,7 @@ public class Field extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 player.setAimingForce(player.getAimingForce() - 5);
+                repaint();
             }
 
         });
@@ -83,6 +90,7 @@ public class Field extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tossApple();
+                repaint();
             }
         });
     }
@@ -96,6 +104,8 @@ public class Field extends JPanel {
         for(Apple apple : apples) {
             g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
         }
+        g.drawString("Angle: " + player.getAimingAngle(), 20, 20);
+        g.drawString("Force: " + player.getAimingForce(), 20, 40);
 
     }
 }
