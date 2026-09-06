@@ -8,19 +8,24 @@ import java.util.List;
 
 public class Field extends JPanel {
     public static final float GRAVITY = 0.5f;
+    public static final int GROUND_Y = 470;
 
     private final List<Apple> apples = new ArrayList<>();
 
     private final Physicist player;
     private final Tree tree;
+    private final Timer gameLoop;
+    private int score;
 
     public Field() {
 
         player = new Physicist(100, 100);
         tree = new Tree(400, 300);
 
-
         setPreferredSize(new Dimension(800, 500));
+        setFocusable(true);
+        gameLoop = new Timer(16, e -> updateGame());
+        gameLoop.start();
         setUpControls();
     }
 
@@ -37,25 +42,32 @@ public class Field extends JPanel {
     }
 
     public void updateGame() {
-
         for (Apple apple : apples) {
+            if (!apple.isActive()) {
+                continue;
+            }
+
             apple.step();
-            if(isHitTree(apple))
-            {
+
+            if (isHitTree(apple)) {
                 apple.setPosition(tree.getX(), tree.getY());
+                apple.setActive(false);
+                score++;
             }
         }
 
+        apples.removeIf(apple -> !apple.isActive());
         repaint();
     }
+
     private boolean isHitTree(Apple apple) {
         int distanceX = apple.getX() - tree.getX();
         int distanceY = apple.getY() - tree.getY();
         double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
         return distance < 20;
     }
-    private void setUpControls()
-    {
+
+    private void setUpControls() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
         inputMap.put(KeyStroke.getKeyStroke("LEFT"), "aimLeft");
@@ -77,26 +89,23 @@ public class Field extends JPanel {
         actionMap.put("aimRight", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    if(player.getAimingAngle() >= 360) {
-                        player.setAimingAngle(0);
-                    }
-                    else {
-                        player.setAimingAngle(player.getAimingAngle() + 5);
-                        repaint();
-                    }
-
+                if (player.getAimingAngle() >= 360) {
+                    player.setAimingAngle(0);
+                } else {
+                    player.setAimingAngle(player.getAimingAngle() + 5);
+                    repaint();
+                }
             }
 
         });
         actionMap.put("increaseForce", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    if(player.getAimingForce() >= 100) {
-                        player.setAimingForce(0);
-                    }
-                    player.setAimingForce(player.getAimingForce() + 5);
-                    repaint();
-
+                if (player.getAimingForce() >= 100) {
+                    player.setAimingForce(0);
+                }
+                player.setAimingForce(player.getAimingForce() + 5);
+                repaint();
             }
 
         });
@@ -126,19 +135,19 @@ public class Field extends JPanel {
         g.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
         Graphics2D g2d = (Graphics2D) g;
         float force = player.getAimingForce();
-        int aimLength = 20 + (int)(force*5);
+        int aimLength = 20 + (int) (force * 5);
         float thickness = 1 + force / 10;
         g2d.setStroke(new BasicStroke(thickness));
         double radians = Math.toRadians(player.getAimingAngle());
-        int endX = player.getX() + (int)(Math.cos(radians) * aimLength);
-        int endY = player.getY() - (int)(Math.sin(radians) * aimLength);
+        int endX = player.getX() + (int) (Math.cos(radians) * aimLength);
+        int endY = player.getY() - (int) (Math.sin(radians) * aimLength);
         g2d.drawLine(player.getX(), player.getY(), endX, endY);
         g.fillRect(tree.getX() - 10, tree.getY() - 50, 20, 50);
-        for(Apple apple : apples) {
+        for (Apple apple : apples) {
             g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
         }
         g.drawString("Angle: " + player.getAimingAngle(), 20, 20);
         g.drawString("Force: " + player.getAimingForce(), 20, 40);
-
+        g.drawString("Score: " + score, 680, 20);
     }
 }

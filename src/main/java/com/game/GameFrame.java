@@ -18,4 +18,8 @@ public class GameFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }
+
+    public Field getField() {
+        return field;
+    }
 }

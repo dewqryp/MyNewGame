@@ -10,6 +10,7 @@ public class Apple implements GamePiece {
     private float velocityY;
 
     private final float mass = 1.0f;
+    private boolean active = true;
 
     public Apple(int x, int y) {
         this.x = x;
@@ -28,11 +29,26 @@ public class Apple implements GamePiece {
     }
 
     public void step() {
+        if (!active) {
+            return;
+        }
 
         velocityY += Field.GRAVITY;
+        x += (int) velocityX;
+        y += (int) velocityY;
 
-        x += velocityX;
-        y += velocityY;
+        if (y >= Field.GROUND_Y) {
+            y = Field.GROUND_Y;
+            active = false;
+        }
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
