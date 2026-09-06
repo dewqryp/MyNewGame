@@ -40,9 +40,19 @@ public class Field extends JPanel {
 
         for (Apple apple : apples) {
             apple.step();
+            if(isHitTree(apple))
+            {
+                apple.setPosition(tree.getX(), tree.getY());
+            }
         }
 
         repaint();
+    }
+    private boolean isHitTree(Apple apple) {
+        int distanceX = apple.getX() - tree.getX();
+        int distanceY = apple.getY() - tree.getY();
+        double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+        return distance < 20;
     }
     private void setUpControls()
     {
