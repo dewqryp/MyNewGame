@@ -46,7 +46,11 @@ public class Field extends JPanel {
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+        g.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
+        g.fillRect(tree.getX() - 10, tree.getY() - 50, 20, 50);
+        for(Apple apple : apples) {
+            g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
+        }
 
-        // Здесь будем рисовать игру
     }
 }
