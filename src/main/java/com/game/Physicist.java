@@ -10,6 +10,8 @@ public class Physicist implements GamePiece {
     public Physicist(int x, int y) {
         this.x = x;
         this.y = y;
+        aimingAngle = 45;
+        aimingForce = 10;
     }
 
     public float getAimingAngle() {

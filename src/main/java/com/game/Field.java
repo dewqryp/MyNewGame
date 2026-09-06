@@ -2,6 +2,7 @@ package com.game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,50 @@ public class Field extends JPanel {
         }
 
         repaint();
+    }
+    private void setUpControls()
+    {
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+        inputMap.put(KeyStroke.getKeyStroke("LEFT"), "aimLeft");
+        inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "aimRight");
+        inputMap.put(KeyStroke.getKeyStroke("UP"), "increaseForce");
+        inputMap.put(KeyStroke.getKeyStroke("DOWN"), "decreaseForce");
+        inputMap.put(KeyStroke.getKeyStroke("SPACE"), "tossApple");
+        actionMap.put("aimLeft", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.setAimingAngle(player.getAimingAngle() - 5);
+            }
+
+        });
+        actionMap.put("aimRight", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.setAimingAngle(player.getAimingAngle() + 5);
+            }
+
+        });
+        actionMap.put("increaseForce", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.setAimingForce(player.getAimingForce() + 5);
+            }
+
+        });
+        actionMap.put("decreaseForce", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.setAimingForce(player.getAimingForce() - 5);
+            }
+
+        });
+        actionMap.put("tossApple", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tossApple();
+            }
+        });
     }
 
     @Override
