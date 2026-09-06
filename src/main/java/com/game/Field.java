@@ -130,24 +130,96 @@ public class Field extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
-        g.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
-        Graphics2D g2d = (Graphics2D) g;
+
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        drawBackground(g2d);
+        drawGround(g2d);
+        drawTrajectory(g2d);
+        drawPlayer(g2d);
+        drawTree(g2d);
+        drawApples(g2d);
+        drawHud(g2d);
+
+        g2d.dispose();
+    }
+
+    private void drawBackground(Graphics2D g2d) {
+        GradientPaint sky = new GradientPaint(0, 0, new Color(135, 206, 235), 0, getHeight(), new Color(240, 248, 255));
+        g2d.setPaint(sky);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        g2d.setColor(new Color(255, 255, 255, 70));
+        for (int i = 0; i < 10; i++) {
+            int x = 50 + i * 80;
+            int y = 60 + (i % 3) * 25;
+            g2d.fillOval(x, y, 4, 4);
+        }
+    }
+
+    private void drawGround(Graphics2D g2d) {
+        g2d.setColor(new Color(89, 172, 76));
+        g2d.fillRect(0, GROUND_Y, getWidth(), getHeight() - GROUND_Y);
+
+        g2d.setColor(new Color(118, 90, 51));
+        for (int i = 0; i < getWidth(); i += 30) {
+            g2d.fillRect(i, GROUND_Y, 15, 8);
+        }
+    }
+
+    private void drawTrajectory(Graphics2D g2d) {
         float force = player.getAimingForce();
         int aimLength = 20 + (int) (force * 5);
         float thickness = 1 + force / 10;
         g2d.setStroke(new BasicStroke(thickness));
+        g2d.setColor(new Color(255, 255, 255, 180));
+
         double radians = Math.toRadians(player.getAimingAngle());
         int endX = player.getX() + (int) (Math.cos(radians) * aimLength);
         int endY = player.getY() - (int) (Math.sin(radians) * aimLength);
         g2d.drawLine(player.getX(), player.getY(), endX, endY);
-        g.fillRect(tree.getX() - 10, tree.getY() - 50, 20, 50);
+    }
+
+    private void drawPlayer(Graphics2D g2d) {
+        g2d.setColor(new Color(72, 72, 72));
+        g2d.fillRect(player.getX() - 10, player.getY() - 20, 20, 40);
+
+        g2d.setColor(new Color(240, 180, 120));
+        g2d.fillOval(player.getX() - 12, player.getY() - 30, 24, 18);
+    }
+
+    private void drawTree(Graphics2D g2d) {
+        g2d.setColor(new Color(92, 64, 28));
+        g2d.fillRect(tree.getX() - 12, tree.getY() - 60, 24, 60);
+
+        g2d.setColor(new Color(54, 128, 52));
+        g2d.fillOval(tree.getX() - 42, tree.getY() - 90, 84, 58);
+        g2d.fillOval(tree.getX() - 58, tree.getY() - 70, 54, 48);
+        g2d.fillOval(tree.getX() + 4, tree.getY() - 70, 54, 48);
+
+        g2d.setColor(new Color(91, 143, 59));
+        g2d.fillOval(tree.getX() - 22, tree.getY() - 45, 44, 26);
+    }
+
+    private void drawApples(Graphics2D g2d) {
         for (Apple apple : apples) {
-            g.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
+            g2d.setColor(new Color(180, 30, 30));
+            g2d.fillOval(apple.getX() - 8, apple.getY() - 8, 16, 16);
+            g2d.setColor(new Color(255, 255, 255, 120));
+            g2d.fillOval(apple.getX() - 3, apple.getY() - 5, 5, 5);
         }
-        g.drawString("Angle: " + player.getAimingAngle(), 20, 20);
-        g.drawString("Force: " + player.getAimingForce(), 20, 40);
-        g.drawString("Score: " + score, 680, 20);
+    }
+
+    private void drawHud(Graphics2D g2d) {
+        g2d.setColor(new Color(30, 30, 30, 180));
+        g2d.fillRoundRect(12, 12, 210, 72, 14, 14);
+
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g2d.drawString("Angle: " + player.getAimingAngle(), 24, 36);
+        g2d.drawString("Force: " + player.getAimingForce(), 24, 58);
+        g2d.drawString("Score: " + score, 24, 80);
     }
 }
